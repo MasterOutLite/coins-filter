@@ -1,0 +1,9 @@
+.root {
+    padding: 4px;
+    margin: 4px 0;
+}
+
+.root:hover {
+    background: #757171;
+    border-radius: 4px;
+}

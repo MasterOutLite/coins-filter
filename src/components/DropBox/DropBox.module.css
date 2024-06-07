@@ -1,0 +1,29 @@
+.root {
+    position: absolute;
+    z-index: 101;
+    left: 0;
+
+    width: max-content;
+    max-width: 600px;
+
+    background: #131212;
+    border: #757171 solid 1px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.top-free {
+    bottom: 100%;
+}
+
+.bottom-free {
+    top: 100%;
+}
+
+.right-free {
+    right: 0;
+}
+
+.left-free {
+    left: 0;
+}

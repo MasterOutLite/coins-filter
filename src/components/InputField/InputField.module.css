@@ -1,0 +1,36 @@
+.input {
+    all: unset;
+    flex: 1;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
+.clear {
+    position: relative;
+}
+
+.clear::before {
+    content: '';
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.8s ease-out;
+
+    background: var(--gray);
+    padding: 2px;
+    border-radius: 50%;
+}
+
+.clear:hover::before {
+    opacity: 1;
+}

@@ -1,0 +1,63 @@
+:root {
+    --coinItemPadding: 2px;
+    --gray: #808080FF;
+    --gray-light: #989898;
+}
+
+.root {
+    position: relative;
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.buttonGroup > * {
+    flex: 1;
+}
+
+.button {
+    color: #ffffff;
+    background: none;
+    font-size: 14px;
+
+    padding: 4px;
+    border: #00282c34 solid 3px;
+}
+
+.buttonActive {
+    background: var(--gray) !important;
+    border-radius: 4px;
+    border: #989898 solid 3px;
+}
+
+.notSelected{
+    filter: brightness(70%);
+    font-weight: 400;
+}
+
+.selected{
+    font-weight: 500;
+}
+
+.contentBox {
+    color: #ffffff;
+    padding: 4px 4px 0px 4px;
+}
+
+.input{
+    padding: 8px 4px;
+}
+
+.divider {
+    height: 1px;
+    width: 100%;
+    background: var(--gray);
+}
+
+
+.listCoins {
+    padding: 10px var(--coinItemPadding) 0 var(--coinItemPadding);
+}
