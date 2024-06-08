@@ -10,6 +10,7 @@ import ButtonSelected from "components/ButtonSelected";
 import InputField from "components/InputField";
 import ScrollBox from "components/ScrollBox";
 import CoinService from "service/CoinService";
+import VirtualizedList from "components/VirtualizedList";
 
 
 function SearchBox() {
@@ -64,7 +65,6 @@ function SearchBox() {
 
         <div className={style.divider}/>
 
-
         <div className={style.contentBox}>
           <div className={style.buttonGroup}>
             <Button onClick={setFavorite(true)} className={!isFavorite ? style.notSelected : style.selected}>
@@ -75,16 +75,25 @@ function SearchBox() {
             </Button>
           </div>
 
-          <ScrollBox className={style.listCoins} maxHeight={300}>
-            {
-              filterCoins.map(value => (
-                <ButtonSelected key={value.value} selected={value}
-                                onSelected={CoinService.add}
-                                onRemove={CoinService.remove}
-                />
-              ))
-            }
-          </ScrollBox>
+          <VirtualizedList
+            // maxHeight={300}
+            render={(item, index) => (
+              <ButtonSelected key={item.value} selected={item}
+                              onSelected={CoinService.add}
+                              onRemove={CoinService.remove}
+              />
+            )} list={filterCoins}/>
+
+          {/*<ScrollBox className={style.listCoins} maxHeight={300}>*/}
+          {/*  /!*{*!/*/}
+          {/*  /!*  filterCoins.map(value => (*!/*/}
+          {/*  /!*    <ButtonSelected key={value.value} selected={value}*!/*/}
+          {/*  /!*                    onSelected={CoinService.add}*!/*/}
+          {/*  /!*                    onRemove={CoinService.remove}*!/*/}
+          {/*  /!*    />*!/*/}
+          {/*  /!*  ))*!/*/}
+          {/*  /!*}*!/*/}
+          {/*</ScrollBox>*/}
 
         </div>
       </DropBox>

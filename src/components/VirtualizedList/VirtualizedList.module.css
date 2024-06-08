@@ -1,0 +1,7 @@
+.root {
+    overflow-y: auto;
+}
+
+.root::-webkit-scrollbar {
+    display: none;
+}
