@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import DropBox from "components/DropBox";
 import style from './SearchBox.module.css'
 import {MagnifyingGlass, Star} from "@phosphor-icons/react";
@@ -8,10 +8,7 @@ import coins from 'const/coins.json';
 import {SelectedElement} from "type/SelectedElement";
 import ButtonSelected from "components/ButtonSelected";
 import InputField from "components/InputField";
-import ScrollBox from "components/ScrollBox";
-import CoinService from "service/CoinService";
 import VirtualizedList from "components/VirtualizedList";
-
 
 function SearchBox() {
   const [text, setText] = useState<string>('');
@@ -20,23 +17,48 @@ function SearchBox() {
   const [elements, setElements] =
     useState<SelectedElement<string>[]>([]);
 
-  useEffect(() => {
+  const instance = useRef(null);
+
+  const [elementsSelected, setElementsSelected] =
+    useState<SelectedElement<string>[]>([]);
+
+  function initCoins() {
     const coinsList = coins.map(value => ({
       text: value,
       value,
       isSelected: false,
     }));
-    const unionCoins = CoinService.uniteCoin(coinsList);
-    setElements(unionCoins);
+    setElements(coinsList);
+  }
+
+  useEffect(() => {
+    initCoins();
   }, []);
 
+  function setVisible(state: boolean) {
+    initCoins();
+    setIsVisible(state);
+  }
+
   const handleButtonClick = useCallback(() => {
-    setIsVisible(p => !p)
-  }, [])
+    setVisible(!isVisible)
+  }, [isVisible])
 
   function setFavorite(state: boolean) {
     return function () {
       setIsFavorite(state);
+    }
+  }
+
+  function selectedItem(item: SelectedElement<string>) {
+    return () => {
+      setElementsSelected(p => [...p, item]);
+    }
+  }
+
+  function removeItem(item: SelectedElement<string>) {
+    return () => {
+      setElementsSelected(p => p.filter(element => element !== item));
     }
   }
 
@@ -50,17 +72,17 @@ function SearchBox() {
   }, [elements, text, isFavorite])
 
   return (
-    <div className={style.root}>
+    <div className={style.root} ref={instance}>
       <Button onClick={handleButtonClick} className={clsx(style.button, isVisible ? style.buttonActive : '')}>
-        <MagnifyingGlass color={'#fff'}/>
+        <MagnifyingGlass size={16} color={'#fff'}/>
         <p>Search</p>
       </Button>
 
-      <DropBox setIsVisible={setIsVisible} isVisible={isVisible} maxWidth={300}>
+      <DropBox parentContainer={instance} setIsVisible={setVisible} isVisible={isVisible} maxWidth={220}>
         <InputField startNode={<MagnifyingGlass size={20} color={'#fff'}/>}
                     placeholder={'Search...'}
                     value={text}
-                    className={clsx(style.contentBox, style.input)}
+                    className={clsx(style.input)}
                     setValue={setText}/>
 
         <div className={style.divider}/>
@@ -79,8 +101,8 @@ function SearchBox() {
             // maxHeight={300}
             render={(item, index) => (
               <ButtonSelected key={item.value} selected={item}
-                              onSelected={CoinService.add}
-                              onRemove={CoinService.remove}
+                              onSelected={selectedItem}
+                              onRemove={removeItem}
               />
             )} list={filterCoins}/>
 
@@ -97,6 +119,7 @@ function SearchBox() {
 
         </div>
       </DropBox>
+
     </div>
   );
 }

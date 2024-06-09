@@ -1,17 +1,22 @@
 .input {
     all: unset;
-    flex: 1;
+    width: 100%;
+    text-align: start;
 }
 
 .inputGroup {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 16px auto 16px;
+    -ms-grid-column-align: center;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .clear {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .clear::before {

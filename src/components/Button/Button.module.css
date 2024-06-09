@@ -1,6 +1,7 @@
 .root{
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 5px;
 
     width: 100%;
@@ -18,5 +19,4 @@
 .root:hover{
     background: var(--gray);
     filter: brightness(100%);
-
 }

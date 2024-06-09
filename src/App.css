@@ -52,6 +52,18 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
     display: flex;
 }
 
-.flex-col{
+.flex-col {
     flex-direction: column;
+}
+
+.box {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 60px;
+    background: #000000;
+    color: #ffffff;
 }

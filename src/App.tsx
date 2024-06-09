@@ -1,20 +1,17 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Header from "components/Header/Header";
 import SearchBox from 'components/SearchBox';
 
 
 function App() {
   return (
     <div className="App">
-      <Header>
-        <div style={{display: 'flex',}}>
-          <div>Some text</div>
-          <SearchBox/>
-        </div>
 
-      </Header>
+      <div className={'box'}>
+        <SearchBox/>
+      </div>
+
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo"/>
         <p>
@@ -29,10 +26,10 @@ function App() {
           Learn React
         </a>
       </header>
-      <Header>
-        <SearchBox/>
-      </Header>
 
+      <div className={'box'}>
+        <SearchBox/>
+      </div>
     </div>
   );
 }

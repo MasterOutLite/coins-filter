@@ -8,11 +8,11 @@ export interface InputFieldProps {
   value?: string,
   placeholder?: string,
   startNode?: ReactNode,
-  endNode?: ReactNode,
   className?: string,
+  name?: string,
 }
 
-function InputField({setValue, value, placeholder, className, startNode, endNode}: InputFieldProps) {
+function InputField({setValue, value, placeholder, className, startNode, name}: InputFieldProps) {
   const [isText, setIsText] = useState<boolean>(false)
 
   const handleClearField = useCallback(() => {
@@ -35,13 +35,11 @@ function InputField({setValue, value, placeholder, className, startNode, endNode
   return (
     <div className={clsx(className, style.inputGroup)}>
       {startNode}
-      <input className={style.input} placeholder={placeholder} value={value} onChange={handleChangeText}/>
-      <div className={style.clear}>
-        <X weight="bold" color={'blue'} className={style.clear} onClick={handleClearField}
-           style={{display: isText ? 'block' : 'none'}}/>
+      <input className={style.input} name={name || 'none'} placeholder={placeholder} value={value}
+             onChange={handleChangeText}/>
+      <div className={style.clear} style={{display: isText ? 'block' : 'none'}}>
+        <X weight="bold" color={'blue'} className={style.clear} onClick={handleClearField}/>
       </div>
-
-      {endNode}
     </div>
   );
 }

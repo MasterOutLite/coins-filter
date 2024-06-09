@@ -1,6 +1,7 @@
-import React, {memo, ReactNode, useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, ReactNode, RefObject, useCallback, useEffect, useRef, useState} from 'react';
 import style from './DropBox.module.css'
 import clsx from "clsx";
+import {createPortal} from "react-dom";
 
 export interface DropBoxProps {
   children?: ReactNode,
@@ -8,12 +9,13 @@ export interface DropBoxProps {
   setIsVisible: (val: boolean) => void,
   maxWidth?: number | string;
   maxHeight?: number | string;
+  parentContainer: RefObject<Element | DocumentFragment>;
 }
 
 type stateYSide = "top" | "bottom";
 type stateXSide = "left" | "right";
 
-function DropBox({children, isVisible, setIsVisible, maxWidth, maxHeight}: DropBoxProps) {
+function DropBox({children, isVisible, setIsVisible, maxWidth, maxHeight, parentContainer}: DropBoxProps) {
   const [freeXSide, setFreeXSide] =
     useState<stateXSide>("left");
 
@@ -35,21 +37,17 @@ function DropBox({children, isVisible, setIsVisible, maxWidth, maxHeight}: DropB
       const spaceLeft = rect.left;
       const spaceRight = viewportWidth - rect.right;
 
-      const state: { yStata: string, xState: string } = {xState: '', yStata: ''};
-
-      let yState: stateYSide = 'bottom';
+      let yState: stateYSide;
       if (spaceAbove >= rect.height) {
         yState = 'top';
       } else if (spaceBelow >= rect.height) {
         yState = 'bottom';
       } else {
         yState = spaceBelow > spaceAbove ? "bottom" : "top";
-        state.yStata = yState
       }
-
       setFreeYSide(yState);
 
-      let xState: stateXSide = 'left';
+      let xState: stateXSide;
       if (spaceLeft >= rect.width) {
         xState = "left";
       } else if (spaceRight >= rect.width) {
@@ -57,13 +55,7 @@ function DropBox({children, isVisible, setIsVisible, maxWidth, maxHeight}: DropB
       } else {
         xState = spaceLeft > spaceRight ? "left" : 'right';
       }
-      state.xState = xState;
       setFreeXSide(xState);
-
-      // console.log({spaceAbove, spaceBelow, spaceLeft, spaceRight})
-      // console.log({height: rect.height, rect})
-      // console.log({freeYSide: style[freeYSide + "-free"], freeXSide: style[freeXSide + "-free"]})
-      // console.log(state)
     }
 
     calculateFreeSide();
@@ -75,7 +67,8 @@ function DropBox({children, isVisible, setIsVisible, maxWidth, maxHeight}: DropB
   }, [isVisible]);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (dropBoxRef.current && !dropBoxRef.current.contains(event.target as Node)) {
+    if (dropBoxRef.current && !dropBoxRef.current.contains(event.target as Node) &&
+      !(parentContainer.current && parentContainer.current.contains(event.target as Node))) {
       setIsVisible(false);
     }
   }, [setIsVisible]);
@@ -92,20 +85,20 @@ function DropBox({children, isVisible, setIsVisible, maxWidth, maxHeight}: DropB
     };
   }, [isVisible, handleClickOutside]);
 
-  const hideModal = useCallback(() => {
-    setIsVisible(false);
-  }, []);
+  if (!parentContainer.current) {
+    return null;
+  }
 
   return (
     <>
-      {isVisible && (
+      {isVisible && createPortal(
         <div
           ref={dropBoxRef}
           className={clsx(style.root, style[freeYSide + "-free"], style[freeXSide + "-free"])}
           style={{maxWidth, maxHeight}}
         >
           {children}
-        </div>
+        </div>, parentContainer.current!
       )}
     </>
   );
